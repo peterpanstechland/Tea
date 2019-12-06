@@ -24,7 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "dwt_stm32_delay.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -74,6 +74,107 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+GPIO_InitTypeDef GPIO_InitStruct;
+
+void gpio_set_input (void)
+{
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+}
+
+
+void gpio_set_output (void)
+{
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+}
+
+uint8_t check =2, temp_l, temp_h;
+uint16_t temp;
+float temperature;
+
+
+uint8_t ds18b20_init (void)
+{
+	gpio_set_output ();   // set the pin as output
+	HAL_GPIO_WritePin (GPIOA, GPIO_PIN_1, 0);  // pull the pin low
+	DWT_Delay_us (480);   // delay according to datasheet
+
+	gpio_set_input ();    // set the pin as input
+	DWT_Delay_us (80);    // delay according to datasheet
+
+	if (!(HAL_GPIO_ReadPin (GPIOA, GPIO_PIN_1)))    // if the pin is low i.e the presence pulse is there
+	{
+		DWT_Delay_us (400);  // wait for 400 us
+		return 0;
+	}
+
+	else
+	{
+		DWT_Delay_us (400);
+		return 1;
+	}
+}
+
+void write (uint8_t data)
+{
+	gpio_set_output ();   // set as output
+
+	for (int i=0; i<8; i++)
+	{
+
+		if ((data & (1<<i))!=0)  // if the bit is high
+		{
+			// write 1
+
+			gpio_set_output ();  // set as output
+			HAL_GPIO_WritePin (GPIOA, GPIO_PIN_1, 0);  // pull the pin LOW
+			DWT_Delay_us (1);  // wait for  us
+
+			gpio_set_input ();  // set as input
+			DWT_Delay_us (60);  // wait for 60 us
+		}
+
+		else  // if the bit is low
+		{
+			// write 0
+
+			gpio_set_output ();
+			HAL_GPIO_WritePin (GPIOA, GPIO_PIN_1, 0);  // pull the pin LOW
+			DWT_Delay_us (60);  // wait for 60 us
+
+			gpio_set_input ();
+		}
+	}
+}
+
+
+uint8_t read (void)
+{
+	uint8_t value=0;
+	gpio_set_input ();
+
+	for (int i=0;i<8;i++)
+	{
+		gpio_set_output ();   // set as output
+
+		HAL_GPIO_WritePin (GPIOA, GPIO_PIN_1, 0);  // pull the data pin LOW
+		DWT_Delay_us (2);  // wait for 2 us
+
+		gpio_set_input ();  // set as input
+		if (HAL_GPIO_ReadPin (GPIOA, GPIO_PIN_1))  // if the pin is HIGH
+		{
+			value |= 1<<i;  // read = 1
+		}
+		DWT_Delay_us (60);  // wait for 60 us
+	}
+	return value;
+}
 
 /* USER CODE END 0 */
 
@@ -113,15 +214,32 @@ int main(void)
   /* USER CODE BEGIN 2 */
   printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
   printf("** Test finished successfully. ** \n\r");
+  DWT_Delay_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  printf("hello world \n\r");
-	  HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
-	  HAL_Delay(500);
+	check = ds18b20_init ();
+	write (0xCC);  // skip ROM
+	write (0x44);  // convert t
+
+	HAL_Delay (800);
+
+	ds18b20_init ();
+	write (0xCC);  // skip ROM
+	write (0xBE);  // Read Scratchpad
+
+	temp_l = read();
+	temp_h = read();
+	temp = (temp_h<<8)|temp_l;
+	temperature = (float)temp/16;
+
+	printf("hello world \n\r");
+	printf("%f \n\r", temperature);
+	HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
+	HAL_Delay(500);
 
     /* USER CODE END WHILE */
 
@@ -298,6 +416,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PC13 */
@@ -306,6 +427,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB3 */
   GPIO_InitStruct.Pin = GPIO_PIN_3;

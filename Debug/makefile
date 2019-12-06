@@ -41,8 +41,8 @@ TEA.list \
 all: TEA.elf secondary-outputs
 
 # Tool invocations
-TEA.elf: $(OBJS) $(USER_OBJS) C:\Users\Peter\STM32CubeIDE\workspace_1.1.0\TEA\STM32F103C8TX_FLASH.ld
-	arm-none-eabi-gcc -o "TEA.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Peter\STM32CubeIDE\workspace_1.1.0\TEA\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TEA.map" -Wl,--gc-sections -static  -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+TEA.elf: $(OBJS) $(USER_OBJS) /Users/peterpan/Documents/Self\ Project/Trouble\ Maker/JAY_Project/Tea/STM32F103C8TX_FLASH.ld
+	arm-none-eabi-gcc -o "TEA.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/Users/peterpan/Documents/Self Project/Trouble Maker/JAY_Project/Tea/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TEA.map" -Wl,--gc-sections -static  -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
