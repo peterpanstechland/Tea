@@ -8,11 +8,28 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include USB_DEVICE/Target/subdir.mk
--include USB_DEVICE/App/subdir.mk
--include Middlewares/ST/STM32_USB_Device_Library/Core/Src/subdir.mk
--include Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/subdir.mk
 -include Drivers/STM32F1xx_HAL_Driver/Src/subdir.mk
+-include Drivers/BSP/Components/wm8994/subdir.mk
+-include Drivers/BSP/Components/ts3510/subdir.mk
+-include Drivers/BSP/Components/stmpe811/subdir.mk
+-include Drivers/BSP/Components/stmpe1600/subdir.mk
+-include Drivers/BSP/Components/st7789h2/subdir.mk
+-include Drivers/BSP/Components/st7735/subdir.mk
+-include Drivers/BSP/Components/s5k5cag/subdir.mk
+-include Drivers/BSP/Components/ov2640/subdir.mk
+-include Drivers/BSP/Components/otm8009a/subdir.mk
+-include Drivers/BSP/Components/mfxstm32l152/subdir.mk
+-include Drivers/BSP/Components/lsm303dlhc/subdir.mk
+-include Drivers/BSP/Components/ls016b8uy/subdir.mk
+-include Drivers/BSP/Components/lis3dsh/subdir.mk
+-include Drivers/BSP/Components/lis302dl/subdir.mk
+-include Drivers/BSP/Components/l3gd20/subdir.mk
+-include Drivers/BSP/Components/ili9341/subdir.mk
+-include Drivers/BSP/Components/ili9325/subdir.mk
+-include Drivers/BSP/Components/ft6x06/subdir.mk
+-include Drivers/BSP/Components/exc7200/subdir.mk
+-include Drivers/BSP/Components/cs43l22/subdir.mk
+-include Drivers/BSP/Adafruit_Shield/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include subdir.mk
@@ -41,8 +58,8 @@ TEA.list \
 all: TEA.elf secondary-outputs
 
 # Tool invocations
-TEA.elf: $(OBJS) $(USER_OBJS) /Users/peterpan/Documents/Self\ Project/Trouble\ Maker/JAY_Project/Tea/STM32F103C8TX_FLASH.ld
-	arm-none-eabi-gcc -o "TEA.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/Users/peterpan/Documents/Self Project/Trouble Maker/JAY_Project/Tea/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TEA.map" -Wl,--gc-sections -static  -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+TEA.elf: $(OBJS) $(USER_OBJS) C:\Users\Peter\STM32CubeIDE\workspace_1.1.0\TEA\STM32F103C8TX_FLASH.ld
+	arm-none-eabi-gcc -o "TEA.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Peter\STM32CubeIDE\workspace_1.1.0\TEA\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TEA.map" -Wl,--gc-sections -static  -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
