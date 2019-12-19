@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include "dwt_stm32_delay.h"
+#include <../Drivers/BSP/Components/ili9341/ili9341.c>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -77,6 +78,7 @@ static void MX_TIM1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+//DS18B20
 GPIO_InitTypeDef GPIO_InitStruct;
 
 void gpio_set_input (void)
@@ -156,7 +158,6 @@ void write (uint8_t data)
 	}
 }
 
-
 uint8_t read (void)
 {
 	uint8_t value=0;
@@ -178,6 +179,9 @@ uint8_t read (void)
 	}
 	return value;
 }
+
+//Screen
+
 
 /* USER CODE END 0 */
 
@@ -241,8 +245,8 @@ int main(void)
 
 	printf("%f \n\r", temperature);
 	HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
-
-
+	uint16_t id = ili9341_ReadID();
+	printf("%d \n\r",id);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -466,7 +470,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pin = GPIO_PIN_13;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PA1 */

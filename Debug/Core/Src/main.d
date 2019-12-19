@@ -21,11 +21,16 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
- ../Core/Inc/dwt_stm32_delay.h
+ ../Core/Inc/dwt_stm32_delay.h \
+ c:\users\peter\stm32cubeide\workspace_1.1.0\tea\drivers\bsp\components\ili9341\ili9341.c \
+ c:\users\peter\stm32cubeide\workspace_1.1.0\tea\drivers\bsp\components\ili9341\ili9341.h \
+ c:\users\peter\stm32cubeide\workspace_1.1.0\tea\drivers\bsp\components\common\lcd.h
 
 ../Core/Inc/main.h:
 
@@ -73,6 +78,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
 
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc.h:
+
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h:
+
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h:
@@ -82,3 +91,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
 
 ../Core/Inc/dwt_stm32_delay.h:
+
+c:\users\peter\stm32cubeide\workspace_1.1.0\tea\drivers\bsp\components\ili9341\ili9341.c:
+
+c:\users\peter\stm32cubeide\workspace_1.1.0\tea\drivers\bsp\components\ili9341\ili9341.h:
+
+c:\users\peter\stm32cubeide\workspace_1.1.0\tea\drivers\bsp\components\common\lcd.h:

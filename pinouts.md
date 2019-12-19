@@ -1,5 +1,3 @@
-# Tea
-
 #PIN OUTS
 
 | GPIO | Functions                   | Screen |
