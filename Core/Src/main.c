@@ -23,9 +23,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "ILI9341_Touchscreen.h"
 #include <stdio.h>
+#include "ILI9341_STM32_Driver.h"
+#include "ILI9341_GFX.h"
+#include "spi.h"
 #include "dwt_stm32_delay.h"
-#include <../Drivers/BSP/Components/ili9341/ili9341.c>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,7 +72,7 @@ UART_HandleTypeDef huart1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
-static void MX_SPI1_Init(void);
+//static void MX_SPI1_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
@@ -219,6 +222,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+  ILI9341_Init();
   printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
   printf("** Test finished successfully. ** \n\r");
   DWT_Delay_Init();
@@ -228,6 +232,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	/* temperautre*/
 	check = ds18b20_init ();
 	write (0xCC);  // skip ROM
 	write (0x44);  // convert t
@@ -245,8 +250,55 @@ int main(void)
 
 	printf("%f \n\r", temperature);
 	HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
-	uint16_t id = ili9341_ReadID();
-	printf("%d \n\r",id);
+
+
+	/*screen test*/
+	ILI9341_Fill_Screen(WHITE);
+	ILI9341_Set_Rotation(SCREEN_HORIZONTAL_2);
+	ILI9341_Draw_Text("FPS TEST, 40 loop 2 screens", 10, 10, BLACK, 1, WHITE);
+	HAL_Delay(2000);
+	ILI9341_Fill_Screen(WHITE);
+
+	uint32_t Timer_Counter = 0;
+	for(uint32_t j = 0; j < 2; j++)
+	{
+		HAL_TIM_Base_Start(&htim1);
+		for(uint16_t i = 0; i < 10; i++)
+		{
+			ILI9341_Fill_Screen(WHITE);
+			ILI9341_Fill_Screen(BLACK);
+		}
+
+		//20.000 per second!
+		HAL_TIM_Base_Stop(&htim1);
+		Timer_Counter += __HAL_TIM_GET_COUNTER(&htim1);
+		__HAL_TIM_SET_COUNTER(&htim1, 0);
+	}
+	Timer_Counter /= 2;
+
+	char counter_buff[30];
+	ILI9341_Fill_Screen(WHITE);
+	ILI9341_Set_Rotation(SCREEN_HORIZONTAL_2);
+	printf(counter_buff, "Timer counter value: %d", Timer_Counter*2);
+	ILI9341_Draw_Text(counter_buff, 10, 10, BLACK, 1, WHITE);
+
+	double seconds_passed = 2*((float)Timer_Counter / 20000);
+	printf(counter_buff, "Time: %.3f Sec", seconds_passed);
+	ILI9341_Draw_Text(counter_buff, 10, 30, BLACK, 2, WHITE);
+
+	double timer_float = 20/(((float)Timer_Counter)/20000);	//Frames per sec
+
+	printf(counter_buff, "FPS:  %.2f", timer_float);
+	ILI9341_Draw_Text(counter_buff, 10, 50, BLACK, 2, WHITE);
+	double MB_PS = timer_float*240*320*2/1000000;
+	printf(counter_buff, "MB/S: %.2f", MB_PS);
+	ILI9341_Draw_Text(counter_buff, 10, 70, BLACK, 2, WHITE);
+	double SPI_utilized_percentage = (MB_PS/(6.25 ))*100;		//50mbits / 8 bits
+	printf(counter_buff, "SPI Utilized: %.2f", SPI_utilized_percentage);
+	ILI9341_Draw_Text(counter_buff, 10, 90, BLACK, 2, WHITE);
+	HAL_Delay(10000);
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -330,38 +382,38 @@ static void MX_I2C1_Init(void)
   * @param None
   * @retval None
   */
-static void MX_SPI1_Init(void)
-{
-
-  /* USER CODE BEGIN SPI1_Init 0 */
-
-  /* USER CODE END SPI1_Init 0 */
-
-  /* USER CODE BEGIN SPI1_Init 1 */
-
-  /* USER CODE END SPI1_Init 1 */
-  /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi1.Init.NSS = SPI_NSS_HARD_OUTPUT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI1_Init 2 */
-
-  /* USER CODE END SPI1_Init 2 */
-
-}
+//static void MX_SPI1_Init(void)
+//{
+//
+//  /* USER CODE BEGIN SPI1_Init 0 */
+//
+//  /* USER CODE END SPI1_Init 0 */
+//
+//  /* USER CODE BEGIN SPI1_Init 1 */
+//
+//  /* USER CODE END SPI1_Init 1 */
+//  /* SPI1 parameter configuration*/
+//  hspi1.Instance = SPI1;
+//  hspi1.Init.Mode = SPI_MODE_MASTER;
+//  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+//  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+//  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+//  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+//  hspi1.Init.NSS = SPI_NSS_HARD_OUTPUT;
+//  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+//  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+//  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+//  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+//  hspi1.Init.CRCPolynomial = 10;
+//  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+//  {
+//    Error_Handler();
+//  }
+//  /* USER CODE BEGIN SPI1_Init 2 */
+//
+//  /* USER CODE END SPI1_Init 2 */
+//
+//}
 
 /**
   * @brief TIM1 Initialization Function

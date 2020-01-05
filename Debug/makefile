@@ -17,6 +17,7 @@ RM := rm -rf
 -include Drivers/BSP/Components/ili9341/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
+-include Core/Inc/subdir.mk
 -include subdir.mk
 -include objects.mk
 
