@@ -197,7 +197,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
-  
+
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -226,6 +226,12 @@ int main(void)
   printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
   printf("** Test finished successfully. ** \n\r");
   DWT_Delay_Init();
+  ILI9341_Fill_Screen(WHITE);
+
+
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -247,56 +253,90 @@ int main(void)
 	temp_h = read();
 	temp = (temp_h<<8)|temp_l;
 	temperature = (float)temp/16;
-
-	printf("%f \n\r", temperature);
 	HAL_GPIO_TogglePin(GPIOC,GPIO_PIN_13);
-
+//	HAL_Delay(1000);
 
 	/*screen test*/
-	ILI9341_Fill_Screen(WHITE);
+
+//	ILI9341_Draw_Text("FPS TEST, 40 loop 2 screens", 10, 10, BLACK, 1, WHITE);
+
+//	printf(counter_buff, "%f \n\r", temperature);
 	ILI9341_Set_Rotation(SCREEN_HORIZONTAL_2);
 	ILI9341_Draw_Text("FPS TEST, 40 loop 2 screens", 10, 10, BLACK, 1, WHITE);
-	HAL_Delay(2000);
-	ILI9341_Fill_Screen(WHITE);
-
-	uint32_t Timer_Counter = 0;
-	for(uint32_t j = 0; j < 2; j++)
-	{
-		HAL_TIM_Base_Start(&htim1);
-		for(uint16_t i = 0; i < 10; i++)
-		{
-			ILI9341_Fill_Screen(WHITE);
-			ILI9341_Fill_Screen(BLACK);
-		}
-
-		//20.000 per second!
-		HAL_TIM_Base_Stop(&htim1);
-		Timer_Counter += __HAL_TIM_GET_COUNTER(&htim1);
-		__HAL_TIM_SET_COUNTER(&htim1, 0);
-	}
-	Timer_Counter /= 2;
-
 	char counter_buff[30];
-	ILI9341_Fill_Screen(WHITE);
-	ILI9341_Set_Rotation(SCREEN_HORIZONTAL_2);
-	printf(counter_buff, "Timer counter value: %d", Timer_Counter*2);
-	ILI9341_Draw_Text(counter_buff, 10, 10, BLACK, 1, WHITE);
-
-	double seconds_passed = 2*((float)Timer_Counter / 20000);
-	printf(counter_buff, "Time: %.3f Sec", seconds_passed);
-	ILI9341_Draw_Text(counter_buff, 10, 30, BLACK, 2, WHITE);
-
-	double timer_float = 20/(((float)Timer_Counter)/20000);	//Frames per sec
-
-	printf(counter_buff, "FPS:  %.2f", timer_float);
-	ILI9341_Draw_Text(counter_buff, 10, 50, BLACK, 2, WHITE);
-	double MB_PS = timer_float*240*320*2/1000000;
-	printf(counter_buff, "MB/S: %.2f", MB_PS);
-	ILI9341_Draw_Text(counter_buff, 10, 70, BLACK, 2, WHITE);
-	double SPI_utilized_percentage = (MB_PS/(6.25 ))*100;		//50mbits / 8 bits
-	printf(counter_buff, "SPI Utilized: %.2f", SPI_utilized_percentage);
+	printf("%.1f \n\r", temperature);
+	sprintf(counter_buff, "Current Temp: %.1f", temperature);
 	ILI9341_Draw_Text(counter_buff, 10, 90, BLACK, 2, WHITE);
-	HAL_Delay(10000);
+
+	printf("\r\n");
+
+	printf("Scanning I2C bus:\r\n");
+	HAL_StatusTypeDef result;
+	uint8_t i;
+	for (i=1; i<128; i++)
+	{
+	  /*
+	   * the HAL wants a left aligned i2c address
+	   * &hi2c1 is the handle
+	   * (uint16_t)(i<<1) is the i2c address left aligned
+	   * retries 2
+	   * timeout 2
+	   */
+	  result = HAL_I2C_IsDeviceReady(&hi2c1, (uint16_t)(i<<1), 2, 2);
+	  if (result != HAL_OK) // HAL_ERROR or HAL_BUSY or HAL_TIMEOUT
+	  {
+		  printf("."); // No ACK received at that address
+	  }
+	  if (result == HAL_OK)
+	  {
+		  printf("0x%X", i); // Received an ACK at that address
+	  }
+	}
+	printf("\r\n");
+
+//	printf(buffer);
+//	HAL_Delay(1000);
+//	ILI9341_Fill_Screen(WHITE);
+
+
+//	uint32_t Timer_Counter = 0;
+//	for(uint32_t j = 0; j < 2; j++)
+//	{
+//		HAL_TIM_Base_Start(&htim1);
+//		for(uint16_t i = 0; i < 10; i++)
+//		{
+//			ILI9341_Fill_Screen(WHITE);
+//			ILI9341_Fill_Screen(BLACK);
+//		}
+//
+//		//20.000 per second!
+//		HAL_TIM_Base_Stop(&htim1);
+//		Timer_Counter += __HAL_TIM_GET_COUNTER(&htim1);
+//		__HAL_TIM_SET_COUNTER(&htim1, 0);
+//	}
+//	Timer_Counter /= 2;
+//
+//	char counter_buff[30];
+//	ILI9341_Fill_Screen(WHITE);
+//	ILI9341_Set_Rotation(SCREEN_HORIZONTAL_2);
+//	printf(counter_buff, "Timer counter value: %d", Timer_Counter*2);
+//	ILI9341_Draw_Text(counter_buff, 10, 10, BLACK, 1, WHITE);
+//
+//	double seconds_passed = 2*((float)Timer_Counter / 20000);
+//	printf(counter_buff, "Time: %.3f Sec", seconds_passed);
+//	ILI9341_Draw_Text(counter_buff, 10, 30, BLACK, 2, WHITE);
+//
+//	double timer_float = 20/(((float)Timer_Counter)/20000);	//Frames per sec
+//
+//	printf(counter_buff, "FPS:  %.2f", timer_float);
+//	ILI9341_Draw_Text(counter_buff, 10, 50, BLACK, 2, WHITE);
+//	double MB_PS = timer_float*240*320*2/1000000;
+//	printf(counter_buff, "MB/S: %.2f", MB_PS);
+//	ILI9341_Draw_Text(counter_buff, 10, 70, BLACK, 2, WHITE);
+//	double SPI_utilized_percentage = (MB_PS/(6.25 ))*100;		//50mbits / 8 bits
+//	printf(counter_buff, "SPI Utilized: %.2f", SPI_utilized_percentage);
+//	ILI9341_Draw_Text(counter_buff, 10, 90, BLACK, 2, WHITE);
+//	HAL_Delay(10000);
 
 
     /* USER CODE END WHILE */

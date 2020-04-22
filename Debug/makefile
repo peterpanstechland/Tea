@@ -39,13 +39,16 @@ default.size.stdout \
 OBJDUMP_LIST += \
 TEA.list \
 
+OBJCOPY_BIN += \
+TEA.bin \
+
 
 # All Target
 all: TEA.elf secondary-outputs
 
 # Tool invocations
-TEA.elf: $(OBJS) $(USER_OBJS) C:\Users\Peter\STM32CubeIDE\workspace_1.1.0\TEA\STM32F103C8TX_FLASH.ld
-	arm-none-eabi-gcc -o "TEA.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\Peter\STM32CubeIDE\workspace_1.1.0\TEA\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TEA.map" -Wl,--gc-sections -static  -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+TEA.elf: $(OBJS) $(USER_OBJS) /Users/peterpan/Documents/SelfProject/TroubleMaker/JAY_Project/Tea/STM32F103C8TX_FLASH.ld
+	arm-none-eabi-gcc -o "TEA.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/Users/peterpan/Documents/SelfProject/TroubleMaker/JAY_Project/Tea/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="TEA.map" -Wl,--gc-sections -static  -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -59,12 +62,17 @@ TEA.list: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+TEA.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "TEA.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
 	-$(RM) *
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
 .PHONY: all clean dependents
 .SECONDARY:

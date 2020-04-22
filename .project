@@ -30,23 +30,6 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>Middlewares/STemWin/Config/GUIConf.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT/STemWin/Target/GUIConf.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/STemWin/Config/GUI_X.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT1/Middlewares/ST/STemWin/OS/GUI_X.c</locationURI>
-		</link>
-		<link>
-			<name>Middlewares/STemWin/Config/LCDConf_stm32f429i_disco_MB1075.c</name>
-			<type>1</type>
-			<locationURI>copy_PARENT/STemWin/Target/LCDConf_stm32f429i_disco_MB1075.c</locationURI>
-		</link>
-	</linkedResources>
 	<variableList>
 		<variable>
 			<name>copy_PARENT</name>

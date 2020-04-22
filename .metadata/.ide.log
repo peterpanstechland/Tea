@@ -1,0 +1,16 @@
+2020-04-22 19:42:34,691 [INFO] Activator:176 - 
+
+
+2020-04-22 19:42:34,695 [INFO] Activator:177 - !SESSION log4j initialized
+2020-04-22 19:42:37,168 [ERROR] LogOutputStream:74 - [STDERR_REDIRECT] 
+2020-04-22 19:43:50,898 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] ***WARNING: Display must be created on main thread due to Cocoa restrictions. Use vmarg -XstartOnFirstThread
+2020-04-22 19:43:50,900 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] ***WARNING: Display must be created on main thread due to Cocoa restrictions. Use vmarg -XstartOnFirstThread
+2020-04-22 19:46:25,088 [INFO] Activator:176 - 
+
+
+2020-04-22 19:46:25,091 [INFO] Activator:177 - !SESSION log4j initialized
+2020-04-22 19:46:28,616 [ERROR] LogOutputStream:74 - [STDERR_REDIRECT] 
+2020-04-22 19:49:17,114 [ERROR] ApiDbMcu:1418 - Can't use Application install path:
+2020-04-22 19:49:17,116 [WARN] RulesReader:54 - Compatibility file://mcu/compatibility.xml not found
+2020-04-22 19:50:54,931 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] ***WARNING: Display must be created on main thread due to Cocoa restrictions. Use vmarg -XstartOnFirstThread
+2020-04-22 19:50:54,933 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] ***WARNING: Display must be created on main thread due to Cocoa restrictions. Use vmarg -XstartOnFirstThread
